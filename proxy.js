@@ -39,7 +39,7 @@ const imgServer = http.createServer((req, res) => {
 
     function callback (error, response, body) {
         if (!error && response.statusCode === 200) {
-            res.setHeader('Content-Type', response.headers['Content-Type']);
+            res.setHeader('Content-Type', response.headers['content-type']);
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.end(body);
         }
