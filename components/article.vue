@@ -2,11 +2,27 @@
     <div class="article">
         <div class="article-title">{{ data.title }}</div>
         <div class="article-content" v-html="data.body"></div>
+
+        <div class="article-comments" v-show="comments.length">
+            <span>评论（{{ comments.length }}）</span>
+            <div class="article-comment" v-for="comment in comments">
+                <div class="article-comment-avatar">
+                    <img :src="comment.avatar">
+                </div>
+                <div class="article-comment-content">
+                    <div class="article-comment-name">{{ comment.author }}</div>
+                    <div class="article-comment-time" v-time="comment.time"></div>
+                    <div class="article-comment-text">{{ comment.content }}</div>
+                </div>
+            </div>
+        </div>
     </div>        
 </template>
 <script>
     import $ from '../libs/util';
+    import Time from '../directives/time';
     export default {
+        directives: { Time },
         props: {
             id: {
                 type: Number,
@@ -15,7 +31,8 @@
         },
         data () {
             return {
-                data: {}
+                data: {},
+                comments: []
             }
         },
         methods: {
@@ -26,6 +43,16 @@
                     this.data = res;
                     // 返回文章顶端
                     window.scrollTo(0, 0);
+                    this.getComments();
+                });
+            },
+            getComments () {
+                this.comments = [];
+                $.ajax.get('story/' + this.id + '/short-comments').then(res => {
+                    this.comments = res.comments.map(comment => {
+                        comment.avatar = $.imgPath + comment.avatar;
+                        return comment;
+                    });
                 });
             }
         },
