@@ -23,24 +23,27 @@
                     <Item
                         v-for="item in list.stories"
                         :data="item"
-                        :key="item.id"></Item>
+                        :key="item.id"
+                        @click.native="handleClick(item.id)"></Item>
                 </div>
             </template>
             <template v-if="type === 'daily'">
                 <Item
                     v-for="item in list"
                     :data="item"
-                    :key="item.id"></Item>
+                    :key="item.id"
+                    @click.native="handleClick(item.id)"></Item>
             </template>
         </div>
-        <!-- <daily-article></daily-article> -->
+        <Article :id="articleId"></Article>
     </div>
 </template>
 <script>
     import $ from './libs/util';
     import Item from './components/item.vue';
+    import Article from './components/article.vue';
     export default {
-        components: { Item },
+        components: { Item, Article },
         data () {
             return {
                 themes: [],
@@ -50,7 +53,8 @@
                 themeId: 0,
                 list: [],
                 recommendList: [],
-                dailyTime: $.getTodayTime()
+                dailyTime: $.getTodayTime(),
+                articleId: 0
             }
         },
         methods: {
@@ -97,6 +101,9 @@
                     this.getRecommendList();
                 }
             },
+            handleClick (id) {
+                this.articleId = id;
+            }
         },
         mounted () {
             this.getRecommendList();
