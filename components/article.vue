@@ -2,10 +2,9 @@
     <div class="article">
         <div class="article-title">{{ data.title }}</div>
         <div class="article-content" v-html="data.body"></div>
-
-        <div class="article-comments" v-show="comments.length">
-            <span>评论（{{ comments.length }}）</span>
-            <div class="article-comment" v-for="comment in comments">
+        <div class="article-comments">
+            <span @click="showComments = !showComments" v-show="comments.length">短评（{{ comments.length }}）</span>
+            <div class="article-comment" v-show="showComments" v-for="comment in comments">
                 <div class="article-comment-avatar">
                     <img :src="comment.avatar">
                 </div>
@@ -32,11 +31,13 @@
         data () {
             return {
                 data: {},
+                showComments: false,
                 comments: []
             }
         },
         methods: {
             getArticle () {
+                this.showComments = false;
                 $.ajax.get('news/' + this.id).then(res => {
                     res.body = res.body.replace(/src="http/g, 'src="' + $.imgPath + 'http')
                     res.body = res.body.replace(/src="https/g, 'src="' + $.imgPath + 'https')
@@ -63,3 +64,8 @@
         }
     }
 </script>
+<style>
+    span {
+        cursor: pointer;
+    }
+</style>
